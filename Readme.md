@@ -1,4 +1,4 @@
-# 🎙️ AWS Polly Text Narrator
+# ⚙️ AWS Polly Text Narrator
 
 A fully serverless application that converts uploaded text files into spoken MP3 audio using **AWS Polly**, **Lambda**, **S3**, **API Gateway**, and **CloudFront**, all provisioned through **Terraform**.
 
