@@ -4,8 +4,16 @@
 .terraform/
 .terraform.lock.hcl
 
-# Lambda packages
+# Lambda packages and dependencies
 terraform/lambda/*.zip
+infra/lambda/*.zip
+infra/lambda/__pycache__/
+infra/lambda/docx/
+infra/lambda/lxml/
+infra/lambda/PyPDF2/
+infra/lambda/*dist-info/
+infra/lambda/typing_extensions.py
+infra/lambda/zip.exe
 
 # AWS credentials
 .aws/
@@ -15,6 +23,28 @@ terraform/lambda/*.zip
 # Environment files
 .env
 .env.local
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
 # IDE
 .vscode/

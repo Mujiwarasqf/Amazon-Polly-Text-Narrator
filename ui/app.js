@@ -15,22 +15,45 @@
   }
 
   $('btn-upload').onclick = async () => {
-    const name = ($('fname').value || "story.txt").trim();
+    const fileInput = $('fileInput');
     const voice = ($('voice').value || "Joanna").trim();
-    const text = $('text').value;
-    if (!text) { alert("Please enter some text"); return; }
-    if (!name.endsWith(".txt")) { alert("Filename must end with .txt"); return; }
+    
+    let name, body, contentType;
+    
+    if (fileInput.files.length > 0) {
+      // File upload mode
+      const file = fileInput.files[0];
+      name = file.name;
+      body = file;
+      contentType = file.type || "application/octet-stream";
+      log("Uploading file: " + name);
+    } else {
+      // Text input mode
+      name = ($('fname').value || "story.txt").trim();
+      const text = $('text').value;
+      if (!text) { alert("Please enter some text or select a file"); return; }
+      if (!name.endsWith(".txt")) { alert("Filename must end with .txt"); return; }
+      body = new Blob([text], {type: "text/plain"});
+      contentType = "text/plain";
+    }
+    
+    const supportedExts = [".txt", ".pdf", ".docx", ".doc"];
+    const hasValidExt = supportedExts.some(ext => name.toLowerCase().endsWith(ext));
+    if (!hasValidExt) {
+      alert("File must be .txt, .pdf, .docx, or .doc");
+      return;
+    }
 
     try {
       $('log').textContent = "";
       log("Requesting presigned PUT for input/" + name + "...");
       const s = await sign("/sign-put?key=" + encodeURIComponent("input/" + name));
 
-      log("Uploading plain text via presigned URL...");
+      log("Uploading via presigned URL...");
       const put = await fetch(s.put_url, {
         method: "PUT",
-        headers: { "Content-Type": "text/plain", "x-amz-meta-voice": voice },
-        body: new Blob([text], {type: "text/plain"})
+        headers: { "Content-Type": contentType, "x-amz-meta-voice": voice },
+        body: body
       });
       if (!put.ok) throw new Error("Upload failed: " + put.status);
 
@@ -42,7 +65,16 @@
   };
 
   $('btn-refresh-link').onclick = async () => {
-    const base = ($('fname').value || "story.txt").trim().replace(/\.txt$/,"");
+    const fileInput = $('fileInput');
+    let filename;
+    
+    if (fileInput.files.length > 0) {
+      filename = fileInput.files[0].name;
+    } else {
+      filename = ($('fname').value || "story.txt").trim();
+    }
+    
+    const base = filename.replace(/\.[^.]+$/, ""); // Remove any extension
     const outKey = "output/" + base + ".mp3";
     try {
       log("Requesting a temporary GET link for " + outKey + "...");
