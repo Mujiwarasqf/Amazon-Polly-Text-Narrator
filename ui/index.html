@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Text Narrator (AWS Polly) • UI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Text Narrator</h1>
+    <p class="sub">Paste text → Upload to S3 → Lambda + Polly → MP3 in output/. Served over CloudFront.</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <label class="row">
+        <span>File name</span>
+        <input id="fname" value="story.txt" placeholder="story.txt" />
+      </label>
+
+      <label class="row">
+        <span>Text</span>
+        <textarea id="text" placeholder="Type or paste text here..."></textarea>
+      </label>
+
+      <div class="row actions">
+        <button id="btn-upload">Upload</button>
+        <button id="btn-refresh-link" title="Fetch a temporary GET link for the expected MP3">Refresh Play Link</button>
+      </div>
+
+      <div class="row">
+        <details>
+          <summary>Advanced</summary>
+          <label class="row">
+            <span>Voice ID</span>
+            <input id="voice" value="Joanna" />
+          </label>
+        </details>
+      </div>
+
+      <pre id="log" class="log"></pre>
+    </section>
+
+    <section class="card">
+      <h2>Preview</h2>
+      <p>If the MP3 has been created, you can play it below.</p>
+      <audio id="player" controls></audio>
+    </section>
+  </main>
+
+  <footer>
+    <span>Enhanced Basic UI • Minimal styling, status logs, and audio playback.</span>
+  </footer>
+
+  <script src="env.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
